@@ -4,10 +4,12 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/davecgh/go-spew/spew"
 )
 
 func handler(w http.ResponseWriter, r *http.Request) {
-	title := "Jenkins X golang http example. V5"
+	title := "Jenkins X golang http example. V7"
 
 	from := ""
 	if r.URL != nil {
@@ -17,7 +19,16 @@ func handler(w http.ResponseWriter, r *http.Request) {
 		log.Printf("title: %s\n", title)
 	}
 
-	fmt.Fprintf(w, "Hello from:  "+title+"\n")
+	// b, _ := ioutil.ReadAll(r.Body)
+	// spew.Dump(string(b))
+
+	r.ParseForm()
+	spew.Dump(r.Form)
+
+	// fmt.Fprintf(w, "Hello from:  "+title+"\n")
+	if len(r.Form["Body"]) > 0 {
+		fmt.Fprintf(w, "You said:  "+r.Form["Body"][0]+"\n")
+	}
 }
 
 func main() {
